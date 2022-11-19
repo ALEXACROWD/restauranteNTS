@@ -14,13 +14,19 @@ def Home(request):
     return render(request, 'home.html')
 
 def PlatosVista(request):
+    #Rutina para consulta de platos
+    platosConsultados = Platos.objects.all()
+    print(platosConsultados)
+    
     #Esta vista va a utilizar un formulario de django, debo crear entonces un objeto de la clase formulario platos()
     formulario=FormularioPlatos()
     
     #creamos un  diccionario para enviar el formulario al html, es decir al template
     
     data = {
-        'formulario': formulario
+        'formulario': formulario,
+        'bandera': False,
+        'platos': platosConsultados
     }
     
     #Recibimos los datos del formulario
@@ -40,18 +46,25 @@ def PlatosVista(request):
             #Lleva datos a la bd
             try:
                 platoNuevo.save()
+                data["bandera"]=True
                 print("Exito guardando...")
             except Exception as error:
                 print("Error guardando", error)
+                data["bandera"]=False
     
     return render(request, 'menuplatos.html', data)
 
 def EmpleadosVista(request):
+    #Rutina para consulta de platos
+    empleadosConsultados = Empleados.objects.all()
+    print(empleadosConsultados)
     
     formulario = FormularioEmpleados()
     
     data = {
-        'formulario': formulario
+        'formulario': formulario,
+        'bandera': False,
+        'empleados': empleadosConsultados
     }
         #Recibimos los datos del formulario
     if request.method=="POST":
@@ -71,8 +84,10 @@ def EmpleadosVista(request):
             #Lleva datos a la bd
             try:
                 empleadoNuevo.save()
+                data["bandera"]=True
                 print("Exito guardando...")
             except Exception as error:
                 print("Error guardando", error)
+                data["bandera"]=False
                     
     return render(request, 'menuempleados.html', data)
